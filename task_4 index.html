@@ -1,0 +1,147 @@
+<!-- 
+Напишите код приложения, который содержит в себе 2 инпута и кнопку, при нажатии происходит следующее:
+
+Если число не совпадает от 100 до 500 — выводить ниже текст «число вне диапазона от 100 до 500»
+Если число попадает в диапазон от 100 до 500 — сделать запрос c помощью XHR по URL https://loremflickr.com/json/g/320/240/all, где get-параметр 320 и 240 — это введённые числа..
+ -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <style>
+
+		.btn {
+		   padding: 0;
+		   background-color: transparent;
+	          border: none;
+		   outline: none;
+		   -webkit-tap-highlight-color: transparent;
+		   box-shadow: none;
+	          cursor: pointer;
+		   margin: 10px 10px;
+		   padding: 10px 15px;
+		   border-radius: 1px;
+		   ont-size: 12px;
+		   line-height: 15px;
+		   text-transform: uppercase;
+		   color: white;
+		   background: #315efb;
+		   transition: 0.3s;	 
+	       }
+
+	   .btn:hover {
+		   box-shadow: 0px 2px 8px 2px rgba(141,150,178,.3);
+		   transform: scale(1.05);
+	       }
+
+	   #form {
+	           margin-top: 10px;
+	   }
+
+	   .card {
+	      width: 200px;
+		   margin: 20px;
+		}
+
+	   .card-image {
+		   display: block;
+		   width: 320px;
+		   height: 240px;
+	   }
+
+   </style>
+   <title>task 4</title>
+</head>
+<body>
+   
+    
+      <div class="form">
+	      <label for="input">Введите число:</label><br>
+         <input type="number" id="form" class="form-1" placeholder="Ширина картинки"></input><br>
+         <input type="number" id="form" class="form-2" placeholder="Высота картинки"></input><br>
+	      <button type="submit" id="button" class="btn">Получить данные</button>
+	      <div id="result">Здесь будет результат запроса</div>
+      </div>
+    
+
+      <script>
+       
+         const inputOneNode = document.querySelector('.form-1');
+	      const inputTwoNode = document.querySelector('.form-2');
+	      const btnNode = document.querySelector('.btn');
+	      const resultNode = document.getElementById('result');
+
+	      const url = 'https://loremflickr.com/json/g/320/240/all';
+          
+         const checkInputValue = url => {
+	         // const valueOne = document.querySelector('.form-1').valueOne;
+            // const valueTwo = document.querySelector('.form-2').valueTwo;
+            const inputOneResult = inputOneNode.value;
+            const inputTwoResult = inputTwoNode.value;   
+	         if ((inputOneResult >= 100 && inputOneResult <= 500) && (inputTwoResult >= 100 && inputTwoResult <= 500)) {
+			      const valueWidth  = url + inputOneResult;
+			      const valueHeight = url + inputTwoResult;
+			      xhrRequest(valueWidth, valueHeight);
+	         } else {
+			      resultNode.innerHTML = `число вне диапазона от 100 до 500`;
+	         }
+	      }
+         
+	      const xhrRequest = (valueWidth, valueHeight)  => {
+	      	const url = 'https://loremflickr.com/json/g/320/240/all';
+		      const xhr = new XMLHttpRequest();
+
+		      xhr.open('GET', url, true); 
+		      xhr.onload = function () {
+				   if (xhr.status !== 200) {
+				     console.log('Статус ответа: ', xhr.status);
+				   } else if (xhr.onerror) {
+				     console.log('Ошибка! Статус ответа: ', xhr.status);
+				   } else {
+				      const response = JSON.parse(xhr.response);
+				      displayResult(response);
+				   }
+		      }
+
+		      xhr.send();
+	      }
+       
+         const displayResult = apiData => {
+			   const resultData = apiData.map(
+	         item => `<div class="card"><img src="${item.download_url}" class="card-image"/><p>${item.author}</p></div>`);
+			      resultNode.innerHTML = resultData.join('')
+			}
+
+			btnNode.addEventListener('click', () => {
+			    checkInputValue(url);
+			})
+       </script>
+
+       
+
+
+
+
+
+	   
+     
+
+
+
+
+	    
+		
+    
+
+
+
+
+    
+</body>
+</html>
